@@ -59,6 +59,7 @@ public class TestController {
 		return result;
 	}
 
+	//2015.04.02 test
 	@RequestMapping(value="/memo2.do", method=RequestMethod.GET)
 	public void test(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		// set page parameters
