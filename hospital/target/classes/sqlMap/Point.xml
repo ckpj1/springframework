@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="point">
+
+	<typeAlias alias="pointHistoryVo" type="kr.ckent.hospital.vo.PointHistoryVO" />
+	<typeAlias alias="pointMngVo" type="kr.ckent.hospital.vo.PointManageVO" />
+
+	
+	
+	<!-- 포인트 적립 내역 조회 -->
+	<select  id="point.getPointHistoryList" parameterClass="java.util.Map" resultClass="pointHistoryVo">
+	    <![CDATA[
+			SELECT 
+					     history.point_type
+			           , (SELECT code_nm FROM t_code WHERE group_code='P01' AND code = history.point_type) AS point_nm
+					   , history.saving_point
+			           , date_format(history.saving_dt, '%Y.%m.%d')  AS saving_dt 
+			FROM t_point_history history
+			WHERE 1=1
+			AND history.user_id = #user_id#
+	    ]]>	
+	    <dynamic>
+	        <isNotEmpty property="point_type" prepend="AND">
+	            	AND history.point_type = #point_type#
+	        </isNotEmpty>	        
+	    </dynamic>
+		 <![CDATA[
+			ORDER BY history.p_idx DESC
+			LIMIT $startidx$, $limit$	    
+	    ]]>
+	</select>
+	
+	
+	<!-- 포인트 적립 내역 등록 -->
+	<insert id="point.insertPointHistory" parameterClass="java.util.Map">
+	    <![CDATA[	    	
+			INSERT INTO t_point_history (user_id, point_type, saving_point, saving_dt)
+			VALUES (#user_id#, #point_type#, $point$, NOW());
+	    ]]>
+	</insert>	
+	
+	
+	<!-- 포인트 타입별 점수 조회 -->
+	<select id="point.getPointMangeList" parameterClass="java.util.Map" resultClass="pointMngVo">
+ 		<![CDATA[
+			SELECT mng.idx
+					   , mng.point_type
+			           , mng.point
+			           , mng.p_desc
+			FROM t_point_manage mng 
+			INNER JOIN (SELECT code, code_nm FROM t_code WHERE group_code = 'P01' ORDER BY display_order ) cd
+				ON mng.point_type = cd.code
+			WHERE 1=1
+			AND mng.del_yn = 'N'
+
+ 		]]>
+ 		<dynamic>
+ 		    <isNotEmpty property="point_type" prepend="AND">
+ 		        <![CDATA[
+ 		        	 mng.point_type = #point_type#
+ 		        ]]>
+ 		    </isNotEmpty> 		    
+ 		</dynamic>
+	</select>
+	
+	
+	<!-- 포인트 타입별 점수 수정 -->
+	<update id="point.updatePointManage" parameterClass="java.util.Map">
+	    <![CDATA[
+	    	UPDATE t_point_manage
+	    	SET point = #point#
+	    		, p_desc = #desc#
+	    		, modify_dt = NOW() 
+	    	WHERE idx = #idx#
+	    	AND 	point_type = #point_type#
+	    ]]>
+	</update>
+	
+	<!-- 포인트 타이별 점수 등록 -->
+		<insert id="point.insertPointManage" parameterClass="java.util.Map">
+	    <![CDATA[
+	    	
+			INSERT INTO t_point_manage(point_type, point, p_desc, del_yn, reg_dt, modify_dt) 
+			VALUES(#point_type#,#point#,#desc#,'N',NOW(),NOW());
+	    
+	    ]]>
+	</insert>
+	
+	<!-- 포인트 타이별 점수 삭제 -->
+		<update id="point.deletePointManage" parameterClass="java.util.Map">
+	    <![CDATA[
+	    	UPDATE t_point_manage
+	    	SET del_yn = 'Y' 
+	    	WHERE idx = #idx#
+	    	AND 	point_type = #point_type#	    	
+	    
+	    ]]>
+	</update>	
+
+		
+		<!-- 회원 탈퇴시 모든 적립 포인트 삭제. -->
+		<delete id="point.deletePointHistory" parameterClass="java.util.Map">
+	    <![CDATA[
+		
+			DELETE FROM t_point_history
+			WHERE user_id = #user_id#   	
+	    
+	    ]]>
+	</delete>	
+	
+		
+		<!-- 회원 총 적립 포인트 조회 -->
+		<select  id="point.getMemberSavingPoint" parameterClass="java.util.Map" resultClass="pointHistoryVo">
+	    <![CDATA[
+			SELECT IFNULL(SUM(saving_point),0) as saving_point
+				FROM t_point_history
+			  WHERE  1=1
+			      AND  user_id = #user_id#
+	    ]]>	
+		</select>
+		
+</sqlMap>

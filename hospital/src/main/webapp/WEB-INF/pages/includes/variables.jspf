@@ -1,0 +1,7 @@
+<fmt:message var="dirImages" key="images.dir" />
+<fmt:message var="dirScripts" key="scripts.dir" />
+<fmt:message var="dirStyles" key="styles.dir" />
+<fmt:message var="dirUpload" key="upload.dir" />
+
+<%-- locale.default --%>
+<fmt:message var="locale" key="pages.locale" />

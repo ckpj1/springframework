@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="mem">
+
+	<typeAlias alias="memberInfoVO" type="kr.ckent.hospital.vo.MemberInfoVO" />
+	<typeAlias alias="pointVO" type="kr.ckent.hospital.vo.PointVO" />
+	
+	<!-- 로그인  , concat("http://192.168.219.100:7070/uploadFile/", (SELECT STRE_FILE_NM FROM COMTNFILEDETAIL WHERE ATCH_FILE_ID = A.ATCH_FILE_ID AND FILE_SN = 0)) AS atch_file_id-->
+	<select id="mem.getMemberLogin" parameterClass="java.util.Map" resultClass="memberInfoVO">
+ 		<![CDATA[
+				SELECT user_id, pwd, nick_nm, intro, age, phone_num
+				, A.sido as sido_code
+                 , (SELECT si_nm FROM t_area_si WHERE si_idx = A.sido) as sido
+                 , A.gungu as gungu_code
+				, (SELECT gungu_nm FROM t_area_gungu WHERE si_idx = A.sido AND gungu_idx = A.gungu) as gungu
+		        ,  DATE_FORMAT(REG_DT, '%Y-%m-%d') reg_dt
+				, (SELECT STRE_FILE_NM FROM comtnfiledetail WHERE ATCH_FILE_ID = A.ATCH_FILE_ID AND FILE_SN = 0) AS profile_url
+				, A.atch_file_id
+			    , (
+					SELECT sum(saving_point) 
+  					   FROM t_point_history
+					 WHERE 1=1
+					     AND user_id = A.user_id
+				  ) as point
+				FROM t_member A
+				WHERE USER_ID = #user_id#
+ 		]]>
+	</select>	
+	
+	
+	<!-- 회원조회 -->
+	<select id="mem.getMemberInfoList" parameterClass="java.util.Map" resultClass="memberInfoVO">
+ 		<![CDATA[
+				SELECT user_id, pwd, nick_nm, intro, age, phone_num
+						, A.sido as sido_code
+		                 , (SELECT si_nm FROM t_area_si WHERE si_idx = A.sido) as sido
+		                 , A.gungu as gungu_code
+						, (SELECT gungu_nm FROM t_area_gungu WHERE si_idx = A.sido AND gungu_idx = A.gungu) as gungu				        
+				        ,  DATE_FORMAT(REG_DT, '%Y-%m-%d') reg_dt
+						, (SELECT STRE_FILE_NM FROM comtnfiledetail WHERE ATCH_FILE_ID = A.ATCH_FILE_ID AND FILE_SN = 0) AS profile_url
+						, A.atch_file_id
+						, (SELECT COUNT(*) FROM t_board WHERE user_id= A.user_id AND (reply_num = 0 and step = 0)) as board_cnt
+						, (SELECT COUNT(*) FROM t_board WHERE user_id= A.user_id AND reply_num > 0) as comment_cnt	
+					    , (
+							SELECT sum(saving_point) as gg
+		  					   FROM t_point_history
+							 WHERE 1=1
+							     AND user_id = A.user_id
+						  ) as point			
+				FROM t_member A
+				WHERE USER_ID = #user_id#
+ 		]]>
+	</select>
+	
+	<!-- 비밀번호 찾기 -->
+		<select id="mem.getMemberIdPwdSearch" parameterClass="java.util.Map" resultClass="memberInfoVO">
+ 		<![CDATA[
+				SELECT user_id, pwd
+				FROM t_member A
+				WHERE 1=1
+				AND user_id = #user_id# 
+ 		]]>	
+	</select>	
+
+		<!-- 중복체크(회원가입시) -->
+		<select id="mem.getMemberDuplicationCheck" parameterClass="java.util.Map" resultClass="memberInfoVO">
+ 		<![CDATA[
+				SELECT user_id, nick_nm
+				FROM t_member A
+				WHERE 1=1
+				AND (user_id = #user_id#  OR nick_nm = #nick_nm#) 
+ 		]]>	
+	</select>	
+	
+		<!-- 닉네임 중복체크 -->
+	 <select id="mem.getNicknameDuplicationCheck" parameterClass="java.util.Map" resultClass="memberInfoVO">
+ 		<![CDATA[
+				SELECT nick_nm
+				FROM t_member A
+				WHERE 1=1
+					AND (user_id != #user_id#  AND nick_nm = #nick_nm#) 	 
+ 		]]>	
+	</select>	
+
+	<!-- 회원가입 -->
+	<insert id="mem.insertMember" parameterClass="java.util.Map" >
+	    <![CDATA[
+	    INSERT INTO t_member(USER_ID, PWD, NICK_NM, INTRO, SIDO, GUNGU, AGE,  PHONE_NUM, LOGIN_CNT,  REG_DT, MODIFY_DT)
+		VALUES
+		( 
+			#user_id#, #pwd#, #nick_nm#, #intro#, #sido#, #gungu#, #age#,#phone_num#, 0, NOW(), NOW()
+		)
+	 	]]>   
+	</insert>
+	
+	<!-- 회원 첨부파일 아이디 업데이트 -->
+		<insert id="mem.updateMemberAtchFileId" parameterClass="java.util.Map" >
+	    <![CDATA[
+	    	UPDATE t_member
+	    	SET ATCH_FILE_ID = #atchFileId#
+	    	WHERE USER_ID = #user_id#
+	 	]]>   
+	</insert>
+	
+	
+	
+	<!-- 회원정보 수정 -->
+	<update id="mem.updateMember" parameterClass="java.util.Map">
+	      <![CDATA[	      	
+			UPDATE t_member
+			SET  NICK_NM = #nick_nm#
+			   , INTRO = #intro#
+			   , SIDO = #sido#
+			   , GUNGU = #gungu#
+			   , AGE = #age#
+			   , MODIFY_DT = NOW()
+			WHERE USER_ID = #user_id#
+	      	
+	     	]]>   
+	</update>
+		
+
+	<!-- 회원탈퇴 :회원 탈퇴시 플래그만 변경하여 탈퇴회원으로 처리	-->
+	<delete  id="mem.deleteMember" parameterClass="java.util.Map">
+	<![CDATA[
+			DELETE FROM t_member
+			WHERE user_id = #user_id#
+		]]>       
+	</delete>   
+	
+	<!-- 포인트 적립 -->
+	<update id="mem.updateMemberPointSaving" parameterClass="java.util.Map">
+	      <![CDATA[	      	
+			UPDATE t_member
+			SET POINT = #point#
+			WHERE USER_ID = #user_id#
+	      	
+	     	]]>   
+	</update>	
+	
+	
+		<!-- 회원의 당일 로그인 적립 포인트와 총 적립 포인트 체크 -->
+		<select id="mem.getMemberSavingPointCheck" parameterClass="java.util.Map" resultClass="pointVO" >
+ 		<![CDATA[
+				
+					SELECT *
+			FROM 
+					(
+						/* 당일 로그인 적립 횟수 확인 1인 경우에는 로그인 포인트 적립 안함. */
+						SELECT count(*)  as today_login_cnt
+						FROM t_point_history
+						WHERE user_id =#user_id#
+						AND point_type = 'P0101'
+						AND date_format(saving_dt, '%Y%m%d') = date_format(NOW(), '%Y%m%d')
+					)  as today_login_cnt
+				  ,(
+						/* 당일 적립 총 포인트 확인 accessible */
+						SELECT ifnull(sum(saving_point),0)  as today_tot_point
+						FROM t_point_history
+						WHERE user_id = #user_id#
+						AND date_format(saving_dt, '%Y%m%d') = date_format(NOW(), '%Y%m%d')
+					) as today_tot_point
+			WHERE 1=1;
+						
+ 		]]>
+	</select>	
+	
+		<!-- 
+					SELECT *
+			FROM 
+					(
+						/* 당일 로그인 적립 횟수 확인 1인 경우에는 로그인 포인트 적립 안함. */
+						SELECT count(*)  as today_login_point
+						FROM t_point_history
+						WHERE user_id ='cknavy2000@gmail.com'
+						AND point_type = 'P0101'
+						AND date_format(saving_dt, '%Y.%m.%d') = date_format(NOW(), '%Y.%m.%d')
+					)  as today_login_point
+				  ,(
+						/* 당일 적립 총 포인트 확인 accessible */
+						SELECT ifnull(sum(saving_point),0)  as today_tot_point
+						FROM t_point_history
+						WHERE user_id = 'cknavy2000@gmail.com'
+						AND date_format(saving_dt, '%Y.%m.%d') = date_format(NOW(), '%Y.%m.%d')
+					) as today_tot_point
+			WHERE 1=1;
+		
+	 -->
+	
+		<!-- 비밀번호 변경 -->
+			<update id="mem.updateMemberPwdChange" parameterClass="java.util.Map">
+	      <![CDATA[	      	
+				UPDATE t_member
+				      SET PWD = #pwd#
+				 WHERE USER_ID = #user_id#
+	      	
+	     	]]>   
+	</update>	
+		
+
+</sqlMap>
+
+

@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+	<script type="text/javascript" src="<c:url value="${dirScripts}/jquery.DOMWindow.js" />"></script>
+	<script type="text/javascript">
+	
+	 
+	var jq = jQuery.noConflict();
+	jq(document).ready(function(){
+		
+		jq("#aHome").click(function(){
+			document.location.href = "/";
+		});
+
+	
+	});
+	
+	</script>
+	
+	
+	<!-- header-->
+	<div id="header">
+
+		<!-- top menu -->
+			  <%--<%@ include file= "/WEB-INF/pages/includes/topmenu.jspf" %> --%>
+			  
+		<!-- skip navigation -->
+		<div class="blind">
+			<a href="#contents">하단메뉴로 바로가기</a>
+		</div>
+		<!-- //skip navigation -->
+
+		<div class="nav">
+		<h1><a href="/main.do" ><img src='<c:url value="${dirImages}/common/logo.png" />' alt="GameKOK" /></a></h1>
+		
+		<ul class="gnb">
+			<li><a href='<c:url value="/introduce/gamekok.do"/>'><img src='<c:url value="${dirImages}/common/gnb_introduce.png" />' alt="GameKOK 소개"/></a></li>
+			<li><a href='<c:url value="/introduce/download.do"/>'><img src='<c:url value="${dirImages}/common/gnb_download.png" />' alt="다운로드"/></a></li>
+			<li><a href='<c:url value="/community/noticeMain.do"/>'><img src='<c:url value="${dirImages}/common/gnb_community.png" />' alt="커뮤니티"/></a></li>
+			<li><a href='<c:url value="/mypage/shopManage.do"/>'><img src='<c:url value="${dirImages}/common/gnb_admin.png" />' alt="매장관리"/></a></li>
+		</ul>
+		</div>	
+		<!-- top menu -->	
+		
+		<!-- logout/login-->
+		<div class="gnb_home">
+		<sec:authorize ifNotGranted="ROLE_USER">		
+			<a href="<c:url value="/signin/login.do" />">로그인</a> | 
+			<a href="<c:url value="/signup/memsel.do" />">회원가입</a>
+		</sec:authorize>		
+		
+		<!-- document.location.replace("/mypage/memModifyPrev.do"); -->
+		
+		<sec:authorize ifAnyGranted="ROLE_USER"> 
+			<span><a href="<c:url value="/mypage/memModifyPrev.do" />"><sec:authentication property="principal.name"/> 님 [<sec:authentication property="principal.auth_nm"/>]</a></span> | 
+			<span><a href="/j_spring_security_logout" class="logout">로그아웃</a></span> 		
+		</sec:authorize>
+			 | <a href='<c:url value="/community/faqMain.do" />' >고객센터</a>
+		</div>		
+		<!-- logout/login-->
+
+	</div>
+	<!-- //header-->	
+	
+
+
+
+
+
+			<script type="text/javascript">
+			jQuery(document).ready(function() {
+
+				navigation('.nav li a',<c:out value="${topmenu_index}"/>);
+				navigation('#lnb ul li a',<c:out value="${sidebar_index}"/>);
+				
+				jQuery('.nav ul').on('mouseleave',function(e) {
+					navigation('.nav li a',<c:out value="${topmenu_index}"/>);
+				});
+				
+				jQuery('.nav li a').on('mouseenter',function() {
+					jQuery('.nav li a').removeClass('on');
+					jQuery(this).parents('li').addClass('on');
+				}).on('mouseleave',function() {
+					jQuery(this).parents('li ').removeClass('on');
+				});				
+				
+				<c:if test="${sidebar_single_yn != 'Y'}" >
+					//left control		
+					jQuery('#lnb ul a').on('mouseenter',function() {
+						jQuery('#lnb ul li a').removeClass('on');
+						jQuery(this).parents('li').addClass('on');
+						
+					}).on('mouseleave',function() {
+						jQuery(this).parents('li').removeClass('on');
+					});
+		
+					jQuery('#lnb ul a').on('mouseleave',function(e) {
+						navigation('.nav li a',<c:out value="${topmenu_index}"/>);
+						navigation('#lnb ul li a', <c:out value="${sidebar_index}"/>);
+					});
+				</c:if>				
+				
+			});
+
+			function navigation(tag, firstMenu) {
+				if(firstMenu != "-1")
+					jQuery(tag).eq(firstMenu).addClass('on');
+			}
+		</script>
+		
+

@@ -1,0 +1,124 @@
+@charset "utf-8";
+html {overflow-y:auto !important;}
+html, body {}
+body {background:0;}
+
+/* common */
+.btn_area {width:100%; text-align:center; margin-bottom:20px;}
+.s_title {font-size:12px; font-weight:bold; line-height:13px; background:url(/common/korea/images/common/bl_stitle.png) no-repeat 3px center; vertical-align:middle; padding-left:16px; margin-bottom:8px;}
+/* header */
+#pop_wrap {width:100%;}
+h1 {height:45px; color:#666; font-size:14px; font-weight:bold; line-height:45px; text-indent:45px; background:#f6f5f6 url(/common/korea/images/common/symbol.png) no-repeat 14px 9px; border-bottom:1px solid #aaa;}
+
+/* pop_contents */
+.pop_container {}
+.pop_contents {text-align:center; border-top:1px solid #fff; border-bottom:1px solid #e6e3e6;  padding:25px 0 30px 0; }
+.pop_contents p {margin-bottom:20px;}
+.pop_container .btn_area {width:100%; text-align:center; border-top:1px solid #fff; padding-top:15px;}
+p.pop_result {line-height:18px; margin-bottom:0;}
+.postal_code {overflow-y:scroll; height:250px;  padding:20px;}
+.adress_list {border-top:1px solid #fe871b; margin-bottom:10px;}
+.adress_list th, 
+.adress_list td {font-size:11px; line-height:26px; padding-left:10px;}
+.adress_list th {border-bottom:1px solid #aaa;}
+.adress_list td {border-bottom:1px solid #e9e9e9;}
+.adress_list th.num,
+.adress_list td.num {text-align:center; padding:0;}
+.adress_list td a {display:block; text-decoration:none;}
+.adress_list tr:hover td.num,
+.adress_list tr:hover td.address {background:#f7f7f7;cursor:pointer;}
+
+/* manager */
+.manager {overflow-y:scroll; overflow-x:hidden; width:360px; height:310px; border-bottom:1px solid #dfdfdf; padding:20px;}
+.manager_list {border-top:1px solid #fe871b; margin-bottom:10px;}
+.manager_list th, 
+.manager_list td {font-size:11px; line-height:26px;}
+.manager_list th {border-bottom:1px solid #aaa;}
+.manager_list td {border-bottom:1px solid #e9e9e9;}
+.manager_list td * {vertical-align:middle;}
+
+/* manager btn_only */
+.btn_manager_orange {display:inline-block; height:18px; color:#fff; background:#ff5a00; border:1px solid #d81e00; line-height:18px; padding:0 5px 0 5px;}
+.btn_manager_orange a {color:#fff;}
+.btn_manager_gray {display:inline-block; height:18px; color:#424242; background:#f0f0f0; border:1px solid #aaa; line-height:18px; padding:0 5px 0 5px;}
+.btn_manager_gray a:hover {color:#424242;}
+.btn_manager_disable {display:inline-block; height:18px; color:#ddd; background:#f0f0f0; border:1px solid #ddd; line-height:18px; padding:0 5px 0 5px;}
+.btn_manager_orange a:hover,
+.btn_manager_gray a:hover,
+.btn_manager_disable a:hover {text-decoration:none;}
+
+/* menu */
+.menu {border-bottom:1px solid #aaa; padding:20px;}
+.menu_list {text-align:center; margin-bottom:10px;}
+.menu_list th, 
+.menu_list td {line-height:18px;}
+.menu_list th {border-top:1px solid #ff8340; border-bottom:1px solid #9e9e9e; background:url(/common/korea/images/community/th_bg.png) repeat-x bottom; padding:5px 0 5px 0;}
+table.menu_list th span {display:block; font-size:11px; line-height:18px; border-right:1px solid #dfdfdf; }
+.menu_list td {border-bottom:1px solid #eaeaea; padding:4px 0 4px 0;}
+.menu_list td input {height:18px;}
+.menu_list td * {vertical-align:middle;}
+.even {background:#f7f7f7;}
+
+/* notice preview */
+div.notice_preview {width:988px; height:312px; background:#272728 url(/common/korea/images/store/notice_bg.jpg) no-repeat; /*border:5px solid #fff;*/ padding:50px 0 0 60px; margin:0 auto;}
+.notice_preview_pdtop {border:5px solid #fff;}
+div.notice_preview textarea {width:680px; height:255px; color:#c1a979; font-size:14px; /* line-height:20px;*/ background:transparent; resize:none; border:0;}
+
+/* notice scroll - ie only */
+div.notice_preview *{
+overflow-y:auto;
+scrollbar-highlight-color:#545455;
+scrollbar-shadow-color:#545455; 
+scrollbar-arrow-color:#272728;
+scrollbar-face-color:#545455; 
+scrollbar-3dlight-color:#666;
+scrollbar-darkshadow-color:#666;
+scrollbar-track-color:#272728;
+}
+
+/* menu preview */
+div.menu_preivew {display:block; width:1044px; height:347px; background:#383838 url(/common/korea/images/store/menu_gbg.png) repeat; /*border-left:1px solid #383838; border-right:1px solid #383838;*/ padding-top:15px;}
+.menu_preview_pdtop {border:7px solid #fff; }
+.price {color:#948c7c; font-size:12px;}
+.mgntop {margin-top:25px !important;} /* 상단여백 별도 */
+
+/* menu_top */
+ul.menu_top {float:left; width:890px; padding-left:112px; margin-bottom:20px;}
+ul.menu_top li {position:relative; float:left; width:123px; height:113px; background:url(/common/korea/images/store/foodbox.gif) no-repeat; padding:17px 0 0 17px; margin-right:30px;}
+ul.menu_top li strong {display:block; width:120px; color:#eebf77; font-size:16px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; -o-text-overow:ellipsis;}
+ul.menu_top li .price {text-decoration:line-through; margin-right:5px;}
+ul.menu_top li .discount {color:#c8bfad; font-size:14px; font-weight:bold;}
+ul.menu_top li img.foodcategory {position:absolute; right:-2px; bottom:-2px; color:#c8bfad; font-size:14px; font-weight:bold;}
+/* menu_drink */
+div.menu_drink, div.menu_snack {position:relative; float:left;}
+div.menu_drink {padding-left:112px; margin-right:30px;}
+div.menu_drink h3 {position:absolute; top:15px; left:132px;}
+div.menu_snack h3 {position:absolute; top:15px; left:20px;}
+div.menu_drink ul, div.menu_snack ul {width:225px; height:135px; background:#272729 url(/common/korea/images/store/menu_etc_bg.gif) repeat; padding:10px 0 0 170px;}
+div.menu_drink ul li, div.menu_snack ul li {overflow:hidden; clear:both; width:205px; height:23px; line-height:23px; border-bottom:1px solid  #3e3a34; vertical-align:top;}
+div.menu_drink ul li strong, div.menu_snack ul li strong {float:left; width:140px; height:22px; color:#c1a979; font-weight:bold; text-indent:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; -o-text-overow:ellipsis;}
+div.menu_drink ul li .price, div.menu_snack ul li .price {float:right; margin-right:10px;}
+
+
+/* text button set */
+.btn_pack,
+.btn_pack *{display:inline-block;overflow:visible; position:relative; font-weight:bold; border:0; background:url(/common/korea/images/common/btn_pack.png) no-repeat; text-decoration:none !important; vertical-align:top; white-space:nowrap}
+.btn_pack{margin-right:4px}
+.btn_pack *{left:4px; cursor:pointer;}
+.btn_pack.m_orange,
+.btn_pack.m_orange *{height:27px; color:#fff; line-height:27px}
+.btn_pack.m_orange{background-position:left 0}
+.btn_pack.m_orange *{background-position:right top; padding:0 13px 0 9px; }
+.btn_pack.m_gray,
+.btn_pack.m_gray *{height:27px; color:#666; line-height:27px}
+.btn_pack.m_gray{background-position:left -30px}
+.btn_pack.m_gray *{background-position:right -30px; padding:0 13px 0 9px; }
+.btn_pack.s_gray,
+.btn_pack.s_gray *{height:20px; color:#666; line-height:20px; font-size:11px; font-weight:normal;}
+.btn_pack.s_gray{background-position:left -84px}
+.btn_pack.s_gray *{background-position:right -84px; padding:0 6px 0 2px; }
+
+/* agreement */
+table.agreement {border-collapse:collapse}
+table.agreement th, 
+table.agreement td {border:1px solid #999; padding:4px; border-collap}

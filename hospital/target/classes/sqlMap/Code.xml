@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="code">
+
+	<typeAlias alias="codeVO" type="kr.ckent.hospital.vo.CodeApiVO" />
+
+	<select id="code.getCodeList" parameterClass="java.util.Map" resultClass="codeVO">
+ 		<![CDATA[
+			SELECT CODE, CODE_NM
+			FROM t_code
+			WHERE GROUP_CODE = #group_code#
+			ORDER BY DISPLAY_ORDER
+ 		]]>
+	</select>
+
+
+
+</sqlMap>

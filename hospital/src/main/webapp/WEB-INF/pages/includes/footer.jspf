@@ -1,0 +1,32 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+
+
+	<script>
+		function pop_terms(flag){
+			var option = 'resizable=0, scrollbars=1, location=0, status=0, titlebar=0, toolbar=0, height=700,width=600';
+			var url = "";
+			
+			if(flag == "service")
+				url = "<c:url value="/popup_terms_service_desc.jsp" />";
+			else
+				url = "<c:url value="/popup_terms_use_desc.jsp" />";
+			
+			window.open(url,'pop_terms',option);
+		}
+	</script>
+
+
+	<!-- footer -->
+	
+	<div id="footer">
+		<img src="/common/korea/images/common/footer.png" alt="(주)엔미디어플랫폼   사업자등록번호 107-81-67349   경기도 성남시 분당구 삼평동 629 네오위즈판교타워 3층   © N Media Platform Co., LTD. ALL RIGHTS RESERVED." border="0" usemap="#Map"/>
+		<map name="Map" id="Map">
+			<area shape="rect" coords="171,2,216,16" href="http://www.nmp-corp.com/" alt="회사소개" target="_blank"/>
+			<area shape="rect" coords="228,2,273,16" href="javascript:pop_terms('service');" alt="이용약관" />
+			<area shape="rect" coords="283,2,375,15" href="javascript:pop_terms('use');" alt="개인정보 취급방침" />
+		</map>
+	</div>
+  <!-- //footer -->	
+	
+	
+		

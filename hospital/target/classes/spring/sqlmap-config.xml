@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	    <settings
+    	maxRequests="512"
+    	maxSessions="128"
+    	maxTransactions="32"
+    	cacheModelsEnabled="true"
+    	lazyLoadingEnabled="true"
+    	enhancementEnabled="false"
+    	useStatementNamespaces="false"
+    />
+	
+	
+	<!-- test용 -->
+	<sqlMap resource="sqlMap/Sample.xml"/>
+	
+	<!-- CODE -->
+    <sqlMap resource="sqlMap/Code.xml"/>		
+    
+    	<!-- 게시판 -->
+    <sqlMap resource="sqlMap/Board.xml"/>		
+	
+    <!-- 회원 관리 -->
+    <sqlMap resource="sqlMap/Member.xml"/>	
+    	
+	<!-- eGovFramework file 첨부 관리-->
+	<sqlMap resource="sqlMap/EgovFileManage.xml"/>
+		
+
+    <!-- 시/군구 조회 -->
+    <sqlMap resource="sqlMap/SiGungu.xml"/>	
+	
+    
+    <!-- 포인트 관리 -->
+    <sqlMap resource="sqlMap/Point.xml"/>	
+    
+    
+</sqlMapConfig>

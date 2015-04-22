@@ -1,0 +1,106 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+
+<%
+    //날짜 생성
+    java.util.Calendar today = java.util.Calendar.getInstance();
+	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMddHHmmss");
+    String day = sdf.format(today.getTime());
+
+    java.util.Random ran = new java.util.Random();
+    
+    //랜덤 문자 길이
+    int numLength = 6;
+    String randomStr = "";
+
+    for (int i = 0; i < numLength; i++) {
+      //0 ~ 9 랜덤 숫자 생성
+      randomStr += ran.nextInt(10);
+    }
+
+	//reqNum은 최대 40byte 까지 사용 가능
+    String reqNum = day + randomStr;
+%>
+
+<script type='text/javascript'>
+	window.name ="Parent_window";
+
+	var jq = jQuery.noConflict();
+
+	function kmc_encoding()
+	{
+		
+		jq.ajax({
+			type: "post",
+			url: "/signup/kmc_encoding_json.do",
+			cache : false,
+			data : jq("#form_kmc").serialize(),
+			dataType:'json',
+			contextType:'application/json',			
+			success : function (json, status) {
+				jq("input[name=tr_cert]").val(json.tr_cert);
+			},
+			error : function (xhr, status, errorThrown) {
+				alert("error["+errorThrown+"]\nstatus["+status+"]\nstatus_text["+xhr.statusText+"]");
+			}
+		}).done(function(){popKMCWindow();});
+	}
+	
+	function popKMCWindow(){
+		
+		var KMCIS_window = window.open('', 'KMCISWindow', 'width=425, height=550, resizable=0, scrollbars=no, status=0, titlebar=0, toolbar=0, left=435, top=250' );
+	
+		if(KMCIS_window == null){
+			alert(" ※ 윈도우 XP SP2 또는 인터넷 익스플로러 7 사용자일 경우에는 \n    화면 상단에 있는 팝업 차단 알림줄을 클릭하여 팝업을 허용해 주시기 바랍니다. \n\n※ MSN,야후,구글 팝업 차단 툴바가 설치된 경우 팝업허용을 해주시기 바랍니다.");
+		}
+   
+		document.form_kmc.action = 'https://www.kmcert.com/kmcis/web/kmcisReq.jsp';
+		document.form_kmc.target = 'KMCISWindow';
+		document.form_kmc.submit();
+	  
+	}
+	
+	function openKMCWindow(){
+		// 인코딩 수행 성공하면 팝업!
+
+		kmc_encoding();
+    }
+    
+</script>
+
+
+
+<form name="form_kmc" id="form_kmc" method="post" >
+	<!--회원사ID-->
+	<input type="hidden" name="cpId" id="cpId" value ="ACTM1001" />
+	<!--URL코드-->
+	<input type="hidden" name="urlCode"  id="urlCode" value="${url_code}" />
+	<!--요청번호-->
+	<input type="hidden" name="certNum" value='<%=reqNum%>' />
+	<!--요청일시-->
+	<!-- 현재시각 세팅(YYYYMMDDHI24MISS) -->
+	<input type="hidden" name="date" value="<%=day%>"/>
+	<!--본인인증방법-->
+	<input type="hidden" name="certMet" value="M" />
+	<!--이용자성명-->
+	<input type="hidden" name="name" value="">
+	<!--휴대폰번호-->
+	<input type="hidden" name="phoneNo" id="textfield" value=""/>
+	<!--이통사(SKT,KT,LG U+)-->
+	<input type="hidden" name="phoneCorp" id="radio" >
+	<!--생년월일-->
+	<input type="hidden" name="birthDay" id="textfield" value=""/>
+	<!--이용자성별(0;남,1:여)--> 
+	<input type="hidden" name="gender" id="radio" >
+	<!--내외국인(0:내국인 1:외국인)-->
+	<input type="hidden" name="nation" id="select" >
+	<!--추가DATA정보(320byte)-->
+	<input type="hidden" name="plusInfo"  value="">
+	<!--본인인증서비스 요청정보-->
+	<input type="hidden" name="tr_cert" value ="${tr_cert}">
+	<!--본인인증서비스 결과정보-->
+	<input type="hidden" name="rec_cert" value="" >
+	<!--결과수신URL-->
+	<input type="hidden" name="tr_url" value="${tr_url}">
+	<!--모화면 진행 URL-->
+	<input type="hidden" name="next_url" value="${next_url}">
+</form>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sido">
+
+	<typeAlias alias="siGunguVO" type="kr.ckent.hospital.vo.SiGunguVO" />
+	
+	
+	<select id="sido.getSidoList" parameterClass="java.util.Map" resultClass="siGunguVO">
+ 		<![CDATA[
+	 		SELECT si_idx, si_nm
+			FROM t_area_si
+			WHERE 1=1
+			ORDER BY display_order 
+ 		]]>
+	</select>	
+	
+	
+	<select id="sido.getGunguList" parameterClass="java.util.Map" resultClass="siGunguVO">
+ 		<![CDATA[
+			SELECT si_idx, gungu_idx, gungu_nm
+			FROM t_area_gungu
+			WHERE  1=1
+ 		]]>
+		<dynamic>
+ 		    <isNotEmpty property="si_idx" prepend="AND">
+ 		        <![CDATA[
+ 		        	 si_idx = #si_idx# 
+ 		        ]]> 		        
+ 		    </isNotEmpty>
+ 		</dynamic> 		 	
+ 		<![CDATA[
+			ORDER BY gungu_nm 	
+ 		]]>
+	</select>
+	
+
+</sqlMap>

@@ -1,0 +1,33 @@
+@charset "utf-8";
+/* main layout */
+body {background:url(/common/korea/images/common/header_bg.png) repeat-x;}
+
+/* visual */
+#visual {clear:both; width:1024px; height:424px; margin-bottom:40px;}
+
+/* main contents */
+#contents {clear:both; overflow:hidden; padding-left:30px; margin-bottom:45px;}
+#contents h2 {margin-bottom:6px;}
+.notice {position:relative; float:left; width:450px; margin-right:30px;}
+.faq {position:relative; float:left; width:450px; border-left:1px solid #efefef; padding-left:30px;}
+#contents li {overflow:hidden; line-height:20px; background:url(/common/korea/images/common/bl_dot.png) no-repeat 2px center; }
+#contents li a {display:block; float:left; overflow:hidden;width:360px; text-indent:10px; white-space:nowrap; text-overflow:ellipsis; -o-text-overow:ellipsis;}
+#contents li span {display:inline-block; float:right; }
+.faq li a {width:450px !important; }
+.notice .more {position:absolute; top:6px; right:0; color:#807f7f; font-size:11px;}
+.faq .more {position:absolute; top:6px; right:0; color:#807f7f; font-size:11px;}
+.more span {color:#ff7800; font-weight:bold;}
+
+/* slide */
+#container .slide_wrap {z-index:1;position:relative;float:left;width:994px;height:430px;margin:0 40px 0 0;overflow:hidden;}
+.slide_wrap .slide_inner {z-index:1;position:relative;width:100%;}
+.slide_wrap .slide_inner ul {z-index:1;position:absolute;top:0;left:0;width:994px;height:430px;margin:0 0 0 0;overflow:hidden; padding: 0;}
+.slide_wrap .slide_inner li {position:absolute;top:0;width:100%;text-align:center;} /*{visibility:hidden;position:absolute;top:0;width:100%;text-align:center;}*/
+.slide_wrap .slide_inner li img {max-width: 994px;}
+
+.slide_wrap .button-prev{display:block;z-index:2;position:absolute;top:167px;left:0;width:27px;height:56px;text-indent:-10000px;overflow:hidden;background:url(/common/korea/images/main/btn_prev.png) no-repeat 0 0;}
+.slide_wrap .button-next{display:block;z-index:2;position:absolute;top:167px;right:0;width:27px;height:56px;text-indent:-10000px;overflow:hidden;background:url(/common/korea/images/main/btn_next.png) no-repeat 0 0;}
+
+.slide_wrap .paging{z-index:2;position:absolute;bottom:20px;left:50%;margin:0 0 0 -15px;text-align:center;}
+.slide_wrap .paging a{display:inline-block;width:10px;height:10px; margin-right:10px; text-indent:-10000px;overflow:hidden;background:url(/common/korea/images/main/bg_paging.png) no-repeat 0 0;}
+.slide_wrap .paging a.on{background:url(/common/korea/images/main/bg_paging_on.png) no-repeat 0 0;}

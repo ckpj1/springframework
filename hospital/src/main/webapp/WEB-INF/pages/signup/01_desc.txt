@@ -1,0 +1,12 @@
+회원가입 관련
+
+ jumjuTerms.jsp : 점주 회원약관
+memberTerms.jsp : 일반회원 회원약관
+ personal.jsp : 휴대폰 인증 화면
+ personal_kmc.jsp : 결과수신 페이지 (FULL URL)
+ personal_end_pop.jsp : 인증 결과 출력(성공/실패)
+ userinfo_kmc.jsp: 회원가입양식에서 휴대폰 인증
+ userinfo.jsp : 회원가입 양식 입력
+ memRegInfo.jsp : 회원가입 완료 정보 
+ chk_member_dup.jsp : 중복가입 확인 페이지.
+ member_sel.jsp : 회원구분(점주/일반회원)

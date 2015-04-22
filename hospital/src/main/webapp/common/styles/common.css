@@ -1,0 +1,91 @@
+@charset "utf-8";
+/* Common */
+body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select{margin:0;padding:0}
+body,input,textarea,select,button,table,legend{font-family:"돋움", Dotum,AppleGothic, Gulim, "굴림",sans-serif; font-size:12px;color:#424242;}
+img,fieldset{border:0}
+ol,ul,li{list-style:none;}
+em,address{font-style:normal}
+a{color:#424242; text-decoration:none}
+a:hover,a:active,a:focus{color:#ff5a00; text-decoration:underline; cursor:pointer;}
+hr, caption, .blind {position:absolute; left:-1000px; top:0; width:0; height:0; font-size:0; line-height:0; overflow:hidden;}
+pre {
+color:#777; line-height:16px; text-align:left; padding-left:6px;
+white-space:pre-wrap;
+word-wrap:break-word; /* IE */
+}
+
+
+html {overflow-y:scroll}
+html, body {}
+body {background:url(/common/korea/images/common/header_bg.png) repeat-x;}
+#wrap {width:100%; margin:0 auto; }
+
+/* ie8 - start - last-child hidden */
+.list_lastchild {border-right:0!important;}
+/* ie8 - end */
+
+/* input */
+.txt {border:1px solid #bebebe; height:18px;}
+.txt_big {border:1px solid #bebebe; height:26px; line-height:26px;}
+/*2013-09-04 백충기 추가*/
+.txt_login_default {font-style: italic;color: #8c8c8c;}
+
+/* text button set */
+.btn_pack,
+.btn_pack *{display:inline-block;overflow:visible; position:relative; font-weight:bold; border:0; background:url(/common/korea/images/common/btn_pack.png) no-repeat; text-decoration:none !important; vertical-align:top; white-space:nowrap}
+.btn_pack{margin-right:4px}
+.btn_pack *{left:4px;cursor:pointer;}
+.btn_pack.m_orange,
+.btn_pack.m_orange *{height:27px; color:#fff; line-height:27px}
+.btn_pack.m_orange{background-position:left 0}
+.btn_pack.m_orange *{background-position:right top; padding:0 13px 0 9px; }
+.btn_pack.s_orange,
+.btn_pack.s_orange *{height:20px; color:#fff; line-height:20px;font-size:11px; font-weight:normal;}
+.btn_pack.s_orange{background-position:left -60px}
+.btn_pack.s_orange *{background-position:right -60px; padding:0 6px 0 2px; }
+.btn_pack.m_gray,
+.btn_pack.m_gray *{height:27px; color:#666; line-height:27px}
+.btn_pack.m_gray{background-position:left -30px}
+.btn_pack.m_gray *{background-position:right -30px; padding:0 13px 0 9px; }
+.btn_pack.s_gray,
+.btn_pack.s_gray *{height:20px; color:#666; line-height:20px; font-size:11px; font-weight:normal;}
+.btn_pack.s_gray{background-position:left -84px}
+.btn_pack.s_gray *{background-position:right -84px; padding:0 6px 0 2px; }
+.btn_m_disable {display:inline-block; height:23px; color:#ccc; font-weight:bold; line-height:24px; background:#eee; border:1px solid #ddd; padding:1px 13px 0 13px;}
+
+
+/* header */
+#header {position:relative; width:964px; height:80px; margin:0 auto;}
+#header h1 {position:absolute; top:28px; left:0;}
+.gnb {position:absolute; top:34px; left:218px;}
+.gnb li {float:left; margin-right:60px;}
+.gnb li a {float:left; display:block; overflow:hidden; height:19px; line-height:19px;}
+.gnb li a:hover img, ul.gnb li a:active img, ul.gnb li a.on img {margin-top:-19px;}
+.gnb_home {position:absolute; top:10px; right:0; color:#eee; font-size:11px;}
+.gnb_home a, .gnb_home span {color:#424242; padding:0 5px 0 5px;}
+.gnb_home a.logout {color:#ff5a00;}
+
+/* container */
+#container {clear:both; width:1024px; margin:0 auto;}
+
+/* footer */
+#footer {clear:both; width:100%; color:#999; text-align:center; line-height:20px; border-top:1px solid #bfbfbf; padding-top:23px; margin-bottom:40px;}
+
+/* login layer */
+/*.login_layer {position:absolute; overflow:hidden; top:274px; left:280px; width:400px; height:204px; background:#f7f6f7; border:2px solid #ff7800;} : position 제외-별도 페이지로 수정*/
+.login_layer {position:relative; overflow:hidden; width:400px; height:204px; background:#f7f6f7; border:2px solid #ff7800;}
+.login_layer h3 {height:37px; border-bottom:1px solid #d8d3d8; padding:12px 0 0 17px; }
+.login_layer div.layer_inputbox {position:relative; overflow:hidden; height:108px; border-top:1px solid #fff; border-bottom:1px solid #d8d3d8; padding-left:34px;}
+.layer_uid {position:absolute; top:22px; left:34px; width:250px; border:0; margin-bottom:8px;}
+.layer_upw {position:absolute; top:58px; left:34px; border:0;}
+.layer_uid span,
+.layer_upw span {display:inline-block; width:62px; height:21px; padding-top:5px;}
+.login_layer div * {vertical-align:middle;}
+input.layer_loginbtn {position:absolute; top:23px; left:283px;}
+.layer_join {height:20px; border-top:1px solid #fff; font-size:11px; text-align:right; background:url(/common/korea/images/common/symbol.png) no-repeat 363px 5px; padding:15px 45px 0 0;}
+.layer_close {position:absolute; right:12px; top:10px;}
+
+/*2013-08-26 bck 추가 : 크롬에서 textarea,input 테두리 제거*/
+textarea:focus, input:focus{
+    outline: none;
+}

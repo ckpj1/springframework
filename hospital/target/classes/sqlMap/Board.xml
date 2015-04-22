@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="board">
+
+	<typeAlias alias="boardVO" type="kr.ckent.hospital.vo.BoardInfoVO" />
+	
+	<!-- 게시글 리스트 조회 -->
+	<!-- 댓글 제외한 내용만 가져온다. -->
+	<select id="board.getBoardList" parameterClass="java.util.Map" resultClass="boardVO">
+ 		<![CDATA[
+
+			SELECT A.board_idx
+				, A.catalog_type
+				,(SELECT code_nm FROM t_code WHERE group_code='A01' AND code = A.catalog_type) as catalog_nm
+				, A.sido as sido_code
+                 , (SELECT si_nm FROM t_area_si WHERE si_idx = A.sido) as sido
+                 , A.gungu as gungu_code
+				, (SELECT gungu_nm FROM t_area_gungu WHERE si_idx = A.sido AND gungu_idx = A.gungu) as gungu
+				 , A.contents, A.read_cnt
+				 , A.parent_idx, A.reply_num, A.step, A.atch_file_id
+				 , B.nick_nm 
+				 , A.treatment
+				 , A.user_id
+				 , B.atch_file_id as user_atch_file_id
+				 , (SELECT stre_file_nm FROM comtnfiledetail WHERE atch_file_id = B.atch_file_id AND file_sn = 0) AS profile_url
+			     ,  if(date_format(now(), '%Y.%m.%d') =  date_format(A.reg_dt, '%Y.%m.%d'), date_format(A.reg_dt, '%H:%i:%s') , date_format(A.reg_dt, '%Y.%m.%d')) as reg_dt
+			     , date_format(A.modify_dt, '%y-%m-%d') modify_dt
+			     , (
+						SELECT count(board_idx)
+						FROM t_board 
+						WHERE 1=1
+						 AND (parent_idx=A.board_idx AND reply_num > 0) 
+					) as comment_cnt
+			FROM t_board A INNER JOIN t_member B
+			WHERE 1=1
+			AND A.user_id = B.user_id
+			AND (A.reply_num = 0 and A.step = 0)
+			
+ 		]]>
+ 		<dynamic>
+ 		    <isNotEmpty property="catalog_type" prepend="AND">
+ 		        <![CDATA[
+ 		        	A.catalog_type =  #catalog_type#
+ 		        ]]>
+ 		    </isNotEmpty> 		    
+ 		    <isNotEmpty property="searchKeyword" prepend="AND">
+ 		        <![CDATA[
+ 		        A.contents LIKE  "%$searchKeyword$%"
+ 		        ]]>
+ 		    </isNotEmpty> 		    
+ 		</dynamic>
+ 		<![CDATA[
+ 		
+ 		ORDER BY board_idx DESC
+ 			LIMIT $startidx$, $limit$
+ 		]]>
+	</select>	
+
+	<!-- 게시판 상세 내용 가져오기 -->
+	<select id="board.getBoardDetail" parameterClass="java.util.Map" resultClass="boardVO">
+ 		<![CDATA[
+
+			SELECT A.board_idx
+				, A.catalog_type
+				,(SELECT code_nm FROM t_code WHERE group_code='A01' AND code = A.catalog_type) as catalog_nm
+				, A.sido as sido_code
+                 , (SELECT si_nm FROM t_area_si WHERE si_idx = A.sido) as sido
+                 , A.gungu as gungu_code
+				, (SELECT gungu_nm FROM t_area_gungu WHERE si_idx = A.sido AND gungu_idx = A.gungu) as gungu
+				 , A.contents, A.read_cnt
+				 , A.parent_idx, A.reply_num, A.step, A.atch_file_id
+				 , B.nick_nm 
+				 , A.treatment
+				 , A.user_id
+				 , map_lat, map_lng, hospital_address
+				 , B.atch_file_id as user_atch_file_id
+				 , (SELECT stre_file_nm FROM comtnfiledetail WHERE atch_file_id = B.atch_file_id AND file_sn = 0) AS profile_url
+    			     ,  if(date_format(now(), '%Y.%m.%d') =  date_format(A.reg_dt, '%Y.%m.%d'), date_format(A.reg_dt, '%H:%i:%s') , date_format(A.reg_dt, '%Y.%m.%d')) as reg_dt
+			     , date_format(A.modify_dt, '%Y.%m.%d') modify_dt
+				, (
+						SELECT count(board_idx)
+						FROM t_board 
+						WHERE 1=1
+						 AND (parent_idx=A.board_idx AND reply_num > 0) 
+					) as comment_cnt			     
+			FROM t_board A INNER JOIN t_member B
+			WHERE 1=1
+			AND A.user_id = B.user_id
+			AND (A.reply_num = 0 and A.step = 0)
+			AND A.board_idx = #board_idx#
+ 		]]>
+	</select>	
+	
+	
+	
+
+	<!-- 게시글 등록-->
+	<insert id="board.insertBoard" parameterClass="java.util.Map" >
+	    <![CDATA[
+			INSERT INTO t_board
+			(  
+				catalog_type, sido, gungu, contents, read_cnt, parent_idx, reply_num, step, user_id, 
+				reg_dt, modify_dt, treatment, map_lat, map_lng, hospital_address
+			)
+			VALUES
+			(
+				#catalog_type#, #sido#, #gungu#, #contents#, 0, 0, 0, 0, #user_id#, NOW(), NOW(), #treatment#,
+				#map_lat#, #map_lng#, #hospital_address#
+			)
+	 	]]>   
+	</insert>
+	
+	
+	<!-- 1. 신규 게시글 등록 후 last inedx 값 가져오기 -->
+	<select id="board.getBoardLastIndex"  resultClass="Integer">
+ 		<![CDATA[
+			SELECT LAST_INSERT_ID()
+ 		]]>
+ 		
+	</select>		
+	
+	<!-- 2. 신규 게시글 등록 후 last index 값을 parent_idx에 바로 업데이트 실시 
+	- 신규글은 board_idx와 parent_idx값이 동일.
+	-->
+	<update id="board.updateBoardParentIndex" parameterClass="java.util.Map">
+	      <![CDATA[	      	
+			UPDATE t_board
+			SET parent_idx = #board_idx#
+			WHERE board_idx = #board_idx#
+	      	
+	     	]]>   
+	</update>
+	
+	
+	
+	<!-- 댓글 가져오기 -->
+		<select id="board.getBoardCommentList" parameterClass="java.util.Map" resultClass="boardVO">
+ 		<![CDATA[
+			SELECT A.board_idx
+				 , A.catalog_type
+				 , A.sido
+				 , A.gungu
+				 , A.treatment
+				 , A.contents
+				 , A.read_cnt
+				 , A.parent_idx, A.reply_num, A.step, A.user_id, B.nick_nm
+			     , B.atch_file_id
+				 , (SELECT stre_file_nm FROM comtnfiledetail WHERE atch_file_id = B.atch_file_id AND file_sn = 0) AS profile_url
+ 			     ,  if(date_format(now(), '%Y.%m.%d') =  date_format(A.reg_dt, '%Y.%m.%d'), date_format(A.reg_dt, '%H:%i:%s') , date_format(A.reg_dt, '%Y.%m.%d')) as reg_dt
+				 , date_format(A.modify_dt, '%Y.%m.%d') modify_dt
+			FROM t_board A INNER JOIN t_member B
+			WHERE 1=1
+			AND A.user_id = B.user_id
+			 AND (A.parent_idx= #board_idx# AND A.reply_num > 0) 
+			ORDER BY A.parent_idx DESC , A.reply_num
+			LIMIT $startidx$, $limit$
+ 		]]>
+ 		
+	</select>	
+	
+		
+	<!-- 댓글 등록
+	 - 댓글은 1depth만 가능하도록 한다.(오픈 후 모든 depth가능하도록변경 예정)
+	 -->
+	<insert id="board.insertComment" parameterClass="java.util.Map" >
+	    <![CDATA[
+			INSERT INTO t_board
+			(
+			 	catalog_type, sido, gungu, contents, read_cnt, parent_idx, reply_num, step, user_id, reg_dt, modify_dt
+			)
+			SELECT #catalog_type#, #sido#, #gungu#, #contents# , 0, #parent_idx#
+				    ,  (SELECT ifnull(max(reply_num)+1, 0) FROM t_board WHERE parent_idx = #parent_idx#) , 1, #user_id#, NOW(), NOW()
+			FROM dual
+	 	]]>   
+	</insert>		 
+	
+	
+	<!-- 글 수정 -->
+	<update id="board.updateBoard" parameterClass="java.util.Map">
+	     <![CDATA[
+	     		UPDATE t_board
+	     		SET  contents = #contents#
+	     		 	 , sido = #sido#
+	     		 	 , gungu = #gungu#
+	     		 	 , catalog_type = #catalog_type#	    
+					 , treatment = #treatment#		 	 
+	     			 , modify_dt = NOW()
+	     		WHERE board_idx = #board_idx#	     		
+	     ]]>   
+	</update>
+		 
+		
+	<!-- 댓글 수정 -->
+	<update id="board.updateComment" parameterClass="java.util.Map">
+	     <![CDATA[
+	     		UPDATE t_board
+	     		SET  contents = #contents#
+	     			 , modify_dt = NOW()
+	     		WHERE board_idx = #board_idx#	     		
+	     ]]>   
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="board.deleteComment" parameterClass="java.util.Map">
+	     <![CDATA[
+	     	DELETE FROM t_board
+	     	WHERE board_idx = #board_idx#	     	
+	    ]]>
+	</delete>
+		
+	
+	<!-- 글 삭제 
+	- 작성자가 작성된 글 작성시 모든 댓글 삭제
+	-->
+	<delete id="board.deleteBoard" parameterClass="java.util.Map">
+	     <![CDATA[
+	     	DELETE FROM t_board
+	     	WHERE parent_idx = #board_idx#	     	
+	    ]]>
+	</delete>	
+
+	
+	<!-- 파일 ATCH_FILE_ID 업데이트 -->
+	<update id="board.updateBoardAtchFileId" parameterClass="java.util.Map">
+	     <![CDATA[
+	     	UPDATE t_board
+	     	SET atch_file_id = #atchFileId#
+	     	WHERE 	board_idx = #board_idx#	     
+	     ]]>	    
+	</update>
+	
+	<!-- 회원탈퇴 -->
+	<delete id="board.MemberdeleteBoard" parameterClass="java.util.Map">
+	     <![CDATA[
+	     	DELETE FROM t_board
+	     	WHERE user_id = #user_id#	     	
+	    ]]>
+	</delete>	
+	
+	<!-- 게시글 작성자 가져오기	 -->
+	<select id="board.getBoardUserId" parameterClass="java.util.Map" resultClass="boardVO">
+ 		<![CDATA[
+
+			SELECT board_idx
+					 , user_id
+		 	  FROM t_board
+			WHERE 1=1
+		        AND board_idx = #board_idx#     
+			
+ 		]]>
+	</select>	
+	
+
+</sqlMap>

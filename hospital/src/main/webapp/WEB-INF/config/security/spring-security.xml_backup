@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+		
+	<http pattern="/common/**" security="none" />
+	<http pattern="/upload/**" security="none" />
+	<http pattern="/favicon.ico" security="none" />
+	
+	<!-- 
+	
+	위 코드는 실질적으로 웹사이트 경로에 대한 권한 설정을 하는 부분이다. 
+	auto-config="true"를 통해서 일반적으로 설정되는 많은 설정 부분이 자동으로 설정된다. 
+	access-denied-page="/login?denied=true" 부분은 인증을 통과 했지만
+	 해당 요청에 맞는 권한이 없는 경우 보내지는 페이지 경로를 설정한다.
+
+	<intercept-url pattern="/-*" access="ROLE_USER" /> 는 웹사이트 모든 경로에 대해서 ROLE_USER 권한이 있어야 접근할 수 있다는 내용이다. 
+	인증된 사용자에 대하여 ROLE_USER 권한이 없다면 access-denied-page에 지정된 페이지로 리다이렉트 된다.
+	
+	 -->
+
+	<http auto-config="true" use-expressions="true" access-denied-page="/signin/denied.do">
+	<intercept-url pattern="/index.jsp" access="permitAll()" />
+	<!-- 모니터링 상태 
+	<intercept-url pattern="/connection.jsp" access="permitAll()" />
+	<intercept-url pattern="/memory.jsp" access="permitAll()" />
+	<intercept-url pattern="/usememory.jsp" access="permitAll()" />
+	-->
+	<intercept-url pattern="/*" access="permitAll()" />
+		
+	
+	<intercept-url pattern="/main.do" access="permitAll()" />
+	<intercept-url pattern="/" access="permitAll()" />
+	<intercept-url pattern="/home/*" access="permitAll()" />   <!-- 홈 -->
+	<intercept-url pattern="/signin/**" access="permitAll()" /> <!-- 로그인/로그아웃 관련 -->
+	<intercept-url pattern="/signup/**" access="permitAll()" /> <!-- 회원가입 관련 -->
+	<intercept-url pattern="/introduce/**" access="permitAll()" /> <!-- 게임콕 소개 -->
+	<intercept-url pattern="/community/**" access="permitAll()" /> <!-- 커뮤니티 -->
+	<intercept-url pattern="/luncher/**" access="permitAll()" /> <!-- 런쳐와 api 통신 -->
+	<intercept-url pattern="/introduce/**" access="permitAll()" /> <!-- 소개페이지 -->
+	<intercept-url pattern="/download/**" access="permitAll()" /> <!-- 런처실행파일 다운 -->
+	<intercept-url pattern="/upload/**" access="permitAll()" /> <!-- 런처실행파일 다운 -->
+	<intercept-url pattern="/cmm/fms/**" access="permitAll()" /> <!-- 첨부파일 -->
+	<intercept-url pattern="/zzzSample/**" access="permitAll()" /> <!-- 테스트페이지. -->
+	<intercept-url pattern="/event/**" access="permitAll()" /> <!-- GT TOUCH등 각종이벤트 -->
+	<intercept-url pattern="/addr/**" access="permitAll()" /> <!-- GT TOUCH 이벤트 참여 시 주소 검색을 위한 접근 권한 조정-->	
+	<intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN' )" />
+	<intercept-url pattern="/mypage/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN' )" />
+
+<!-- 
+			
+		<form-login login-page="/signin/login.do"
+						authentication-failure-handler-ref="loginFailureHandler"
+						authentication-success-handler-ref="loginSuccessHandler"
+						always-use-default-target="true" 
+		/>
+						
+		
+		<logout  invalidate-session="true" success-handler-ref="logoutSuccessHandler" /> 
+		 -->
+		<!-- <remember-me user-service-ref="UserDetailsService" token-validity-seconds="604800" key="actsoft-gamekok"/> -->
+
+		<session-management>
+    		<concurrency-control max-sessions="1" expired-url="/signin/login.do"/>
+    	</session-management>
+
+	</http>
+
+	<!-- 
+	 <beans:bean id="loginFailureHandler" class="kr.actsoft.gamekok.member.web.LoginFailureHandler" />
+	 <beans:bean id="loginSuccessHandler" class="kr.actsoft.gamekok.member.web.LoginSuccessHandler" />
+	 <beans:bean id="logoutSuccessHandler" class="kr.actsoft.gamekok.member.web.LogoutSuccessHandler" />
+	 <beans:bean id="UserDetailsService" class="kr.actsoft.gamekok.member.web.UserDetailsServiceImpl" />
+     <beans:bean id="encoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
+ -->
+	 <!-- 
+	 <authentication-manager alias="authenticationManager">  
+	  <authentication-provider user-service-ref="UserDetailsService">
+	   <password-encoder ref="encoder" />     
+	  </authentication-provider>
+
+	 </authentication-manager> 
+ -->
+</beans:beans>
+
